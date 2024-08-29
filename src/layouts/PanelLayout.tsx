@@ -3,6 +3,8 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Dashboard from "../components/Dashboard";
 import Footer from "../components/Footer";
+import { Route, Routes } from "react-router-dom";
+import { Users } from "../components/Users";
 
 export const PanelLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -11,14 +13,17 @@ export const PanelLayout = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const sidebarProps = window.innerWidth <= 1024 ? { isSidebarOpen } : {};
+  const sidebarProps = window.innerWidth <= 991 ? { isSidebarOpen } : {};
 
   return (
-    <div dir="rtl" className="d-flex font">
+    <div dir="rtl" className="d-flex font justify-content-end">
       <Sidebar {...sidebarProps} />
-      <div className="w-100">
+      <div className="main">
         <Navbar toggleSidebar={toggleSidebar} />
-        <Dashboard />
+        <Routes>
+            <Route path="/*" element={<Dashboard/>}/>
+            <Route path="/users" element={<Users/>} />
+        </Routes>
         <Footer />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { baseApiUrl } from "../../services/api";
 
 interface MyError {
   response: {
@@ -17,7 +18,6 @@ export const Login = () => {
   const [invalid, setInvalid] = React.useState(false);
   const [error, setError] = React.useState<MyError>();
 
-  const baseApiUrl = "https://apitester.ir";
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
