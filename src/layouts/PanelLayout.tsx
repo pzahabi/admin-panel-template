@@ -14,7 +14,7 @@ export const PanelLayout = () => {
   const sidebarProps = window.innerWidth <= 1024 ? { isSidebarOpen } : {};
 
   return (
-    <div dir="rtl" className="d-flex">
+    <div dir="rtl" className="d-flex font">
       <Sidebar {...sidebarProps} />
       <div className="w-100">
         <Navbar toggleSidebar={toggleSidebar} />

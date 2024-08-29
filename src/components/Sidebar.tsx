@@ -10,7 +10,7 @@ const Sidebar = ({ isSidebarOpen }: Props) => {
   return (
     <>
       {open && <div className="bg-dark text-white p-3 vh-100" id="sideBar">
-        <h2 className="text-center text-nowrap">Admin Panel</h2>
+        <h2 className="text-center text-nowrap">پنل ادمین</h2>
         <ul className="nav flex-column">
           <li className="nav-item">
             <a href="#" className="nav-link text-white">

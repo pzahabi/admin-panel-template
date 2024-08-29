@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 interface Props {
     toggleSidebar: () => void;
@@ -17,7 +18,7 @@ const Navbar = ( {toggleSidebar}: Props ) => {
             <a className="nav-link" href="#">Profile</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">Logout</a>
+            <NavLink className="nav-link" onClick={() => localStorage.setItem('token', '')} to={"/admin/login"}>Logout</NavLink>
           </li>
         </ul>
       </div>
