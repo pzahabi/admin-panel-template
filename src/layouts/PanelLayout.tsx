@@ -5,6 +5,7 @@ import Dashboard from "../components/Dashboard";
 import Footer from "../components/Footer";
 import { Route, Routes } from "react-router-dom";
 import { Users } from "../components/Users";
+import { Profile } from "../components/Profile";
 
 export const PanelLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,6 +24,7 @@ export const PanelLayout = () => {
         <Routes>
             <Route path="/*" element={<Dashboard/>}/>
             <Route path="/users" element={<Users/>} />
+            <Route path="/profile" element={<Profile/>} />
         </Routes>
         <Footer />
       </div>

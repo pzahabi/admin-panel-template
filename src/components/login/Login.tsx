@@ -31,6 +31,8 @@ export const Login = () => {
       .post(APIurl, user)
       .then((response) => {
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data.id);
+        localStorage.setItem("role", response.data.role);
         navigate("/admin", { replace: true });
       })
       .catch((err) => {

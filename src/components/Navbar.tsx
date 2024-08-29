@@ -1,28 +1,35 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { Navbar as BootstrapNavbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 
 interface Props {
     toggleSidebar: () => void;
 }
 
-const Navbar = ( {toggleSidebar}: Props ) => {
+const Navbar = ({ toggleSidebar }: Props) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light p-3">
-      <a className="navbar-brand" href="#">داشبورد</a>
-      <button onClick={toggleSidebar} className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon"></span>
-      </button>
-      <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <a className="nav-link" href="#">پروفایل</a>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" onClick={() => localStorage.setItem('token', '')} to={"/admin/login"}>خروج</NavLink>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <BootstrapNavbar expand="lg" bg="light" variant="light" className="p-3">
+      <Container>
+        <div className='d-flex align-items-center'>
+            <NavLink className="navbar-brand" to={"/admin"}>داشبورد</NavLink>
+            <BootstrapNavbar id="navbarNav">
+              <Nav className="ml-auto">
+                <NavDropdown title="تنظیمات " id="basic-nav-dropdown">
+                  <NavDropdown.Item as={NavLink} to={"/admin/profile"}>پروفایل</NavDropdown.Item>
+                  <NavDropdown.Item
+                    as={NavLink}
+                    onClick={() => localStorage.setItem('token', '')}
+                    to={"/admin/login"}
+                  >
+                    خروج
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </BootstrapNavbar>
+        </div>
+        <BootstrapNavbar.Toggle onClick={toggleSidebar} aria-controls="navbarNav" />
+      </Container>
+    </BootstrapNavbar>
   );
 };
 

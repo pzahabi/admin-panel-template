@@ -2,13 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { baseApiUrl } from "../services/api";
 import { Table } from "react-bootstrap";
-
-interface UserInt {
-  firstName: string;
-  lastName: string;
-  username: string;
-  id: number;
-}
+import UserInt from "../models/User";
 
 export const Users = () => {
   const [users, setUsers] = useState<UserInt[]>([]);
@@ -39,7 +33,8 @@ export const Users = () => {
                 <th>ID</th>
                 <th>نام</th>
                 <th>نام خانوادگی</th>
-                <th>Username</th>
+                <th>نام کاربری</th>
+                <th>نقش</th>
               </tr>
             </thead>
             <tbody>
@@ -57,6 +52,7 @@ export const Users = () => {
                   <td>{user.firstName}</td>
                   <td>{user.lastName}</td>
                   <td>{user.username}</td>
+                  <td>{user.role}</td>
                 </tr>
               ))}
             </tbody>
