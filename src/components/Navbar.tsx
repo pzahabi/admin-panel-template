@@ -18,7 +18,7 @@ const Navbar = ({ toggleSidebar }: Props) => {
                   <NavDropdown.Item as={NavLink} to={"/admin/profile"}>پروفایل</NavDropdown.Item>
                   <NavDropdown.Item
                     as={NavLink}
-                    onClick={() => localStorage.setItem('token', '')}
+                    onClick={() => localStorage.clear()}
                     to={"/admin/login"}
                   >
                     خروج

@@ -21,17 +21,20 @@ const Sidebar = ({ isSidebarOpen }: Props) => {
   }, [isSidebarOpen]);
 
   return (
-    <div className={`bg-dark text-white p-3 vh-100 ${open ? "open" : ""}`} id="sideBar">
+    <div className={`bg-dark text-white p-3 pe-1 vh-100 z-top ${open ? "open" : ""}`} id="sideBar">
       <h2 className="text-center text-nowrap">پنل امین</h2>
       <ul className="nav flex-column">
         <li className="nav-item">
-          <NavLink to={"/admin"} className="nav-link text-white">داشبورد</NavLink>
+          <NavLink to={"/admin"} className="nav-link text-white text-nowrap">داشبورد</NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to={"/admin/users"} className="nav-link text-white">کاربران</NavLink>
+          <NavLink to={"/admin/users"} className="nav-link text-white text-nowrap">کاربران</NavLink>
         </li>
         <li className="nav-item">
-          <a href="#" className="nav-link text-white">تنظیمات</a>
+          <NavLink to={"/admin/categories"} className="nav-link text-white text-nowrap">دسته بندی محصولات</NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink to={'/admin/profile'} className="nav-link text-white text-nowrap">تنظیمات</NavLink>
         </li>
       </ul>
     </div>
