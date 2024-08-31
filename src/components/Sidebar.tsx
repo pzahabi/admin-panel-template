@@ -21,20 +21,56 @@ const Sidebar = ({ isSidebarOpen }: Props) => {
   }, [isSidebarOpen]);
 
   return (
-    <div className={`bg-dark text-white p-3 pe-1 vh-100 z-top ${open ? "open" : ""}`} id="sideBar">
+    <div
+      className={`bg-dark text-white p-3 pe-1 vh-100 z-top ${
+        open ? "open" : ""
+      }`}
+      id="sideBar"
+    >
       <h2 className="text-center text-nowrap">پنل امین</h2>
       <ul className="nav flex-column">
         <li className="nav-item">
-          <NavLink to={"/admin"} className="nav-link text-white text-nowrap">داشبورد</NavLink>
+          <NavLink to={"/admin"} className="nav-link text-white text-nowrap">
+            داشبورد
+          </NavLink>
         </li>
+        {localStorage.getItem("role") === "Admin" && (
+          <li className="nav-item">
+            <NavLink
+              to={"/admin/users"}
+              className="nav-link text-white text-nowrap"
+            >
+              کاربران
+            </NavLink>
+          </li>
+        )}
+        {(localStorage.getItem("role") === "Admin" || "operator") && (
+          <>
+            <li className="nav-item">
+              <NavLink
+                to={"/admin/categories"}
+                className="nav-link text-white text-nowrap"
+              >
+                دسته بندی محصولات
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to={"/admin/products"}
+                className="nav-link text-white text-nowrap"
+              >
+                محصولات
+              </NavLink>
+            </li>
+          </>
+        )}
         <li className="nav-item">
-          <NavLink to={"/admin/users"} className="nav-link text-white text-nowrap">کاربران</NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to={"/admin/categories"} className="nav-link text-white text-nowrap">دسته بندی محصولات</NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to={'/admin/profile'} className="nav-link text-white text-nowrap">تنظیمات</NavLink>
+          <NavLink
+            to={"/admin/profile"}
+            className="nav-link text-white text-nowrap"
+          >
+            تنظیمات
+          </NavLink>
         </li>
       </ul>
     </div>

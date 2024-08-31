@@ -7,6 +7,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { Users } from "../components/Users";
 import { Profile } from "../components/Profile";
 import { Categories } from "../components/categories/Categories";
+import { Products } from "../components/products/Products";
 
 export const PanelLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,6 +36,7 @@ export const PanelLayout = () => {
             <Route path="/users" element={<Users/>} />
             <Route path="/profile" element={<Profile/>} />
             <Route path="/categories" element={<Categories/>} />
+            <Route path="/products" element={<Products/>} />
         </Routes>
         <Footer />
       </div>
