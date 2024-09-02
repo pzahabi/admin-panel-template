@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Table, Spinner, Pagination } from "react-bootstrap";
-import Product from "../../models/Product";
+import ProductInt from "../../models/Product";
 
 interface Props {
-  products: Product[];
+  products: ProductInt[];
   isLoading: boolean;
   isEditing: number | null;
-  editProduct: (item: Product) => void;
-  removeProduct: (item: Product) => void;
+  editProduct: (item: ProductInt) => void;
+  removeProduct: (item: ProductInt) => void;
   cancel: () => void;
 }
 

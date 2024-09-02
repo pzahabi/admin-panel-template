@@ -4,8 +4,10 @@ import { baseApiUrl } from "../../services/api";
 import { ProductEdit } from "./ProductEdit";
 import { ProductSearch } from "./ProductSearch";
 import { ProductInfo } from "./ProductInfo";
-import Product from "../../models/Product";
-import Category from "../../models/Category";
+import ProductInt from "../../models/Product";
+import CategoryInt from "../../models/Category";
+import Product from "../../services/Product";
+import Category from "../../services/Category";
 
 export const Products = () => {
   const APIurl = `${baseApiUrl}/api/ProductsControllerWithTokenAuth`;
@@ -20,26 +22,19 @@ export const Products = () => {
     supplierName: "",
   };
 
-  const [products, setProducts] = React.useState<Product[]>([]);
-  const [product, setProduct] = React.useState<Product>(emptyProduct);
+  const [products, setProducts] = React.useState<ProductInt[]>([]);
+  const [product, setProduct] = React.useState<ProductInt>(emptyProduct);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isUploading, setIsUploading] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState<number | null>(null);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const [categories, setCategories] = React.useState<Category[]>([]);
+  const [categories, setCategories] = React.useState<CategoryInt[]>([]);
 
   const fetchProducts = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(APIurl, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        params: {
-          search: searchQuery,
-        },
-      });
-      setProducts(response.data);
+      const data = await Product.getAll(APIurl, searchQuery);
+      setProducts(data);
     } catch (error) {
       alert(error);
     } finally {
@@ -47,15 +42,17 @@ export const Products = () => {
     }
   }, [APIurl, searchQuery]);
 
-  const editProduct = (item: Product) => {
-    const temp = products.find((q: Product) => q.productId === item.productId);
+  const editProduct = (item: ProductInt) => {
+    const temp = products.find(
+      (q: ProductInt) => q.productId === item.productId
+    );
     if (temp) {
       setProduct(temp);
       setIsEditing(temp.productId);
     }
   };
 
-  const save = async (item: Product) => {
+  const save = async (item: ProductInt) => {
     setIsEditing(null);
     setIsUploading(true);
     const headers = {
@@ -63,44 +60,35 @@ export const Products = () => {
     };
     try {
       if (item.productId) {
-        await axios.put(`${APIurl}/${item.productId}`, item, { headers });
+        await Product.update(APIurl, item);
       } else {
-        await axios
-          .get(`${baseApiUrl}/api/CategoriesWithTokenAuth`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          })
-          .then((result) => {
-            setCategories(result.data);
-          })
-          .catch((error) => {
-            alert(error);
-          });
+        try {
+          const data = await Category.getAll(
+            `${baseApiUrl}/api/CategoriesWithTokenAuth`
+          );
+          setCategories(data);
+        } catch (error) {
+          alert(error);
+        }
 
-        const categoryId = categories.findIndex(
+        const thisCategory = categories.find(
           (category) => category.categoryName === item.categoryName
         );
+        const categoryId = thisCategory?.categoryId;
         if (!categoryId) throw new Error("دسته بندی مورد نظر یافت نشد.");
-        const thisProduct = {
-          productName: item.productName,
-          unitPrice: item.unitPrice,
-          categoryId: categoryId,
-          supplierId: 1,
-        };
 
-        await axios.post(APIurl, thisProduct, { headers });
+        await Product.add(APIurl, item, categoryId);
       }
       fetchProducts();
     } catch (err) {
-      console.log(err);
+      alert(err);
     } finally {
       setIsUploading(false);
       setProduct(emptyProduct);
     }
   };
 
-  const removeProduct = async (item: Product) => {
+  const removeProduct = async (item: ProductInt) => {
     const thisProduct = products.find((q) => q.productId === item.productId);
     if (thisProduct) {
       const isConfirmed = window.confirm(
@@ -108,21 +96,17 @@ export const Products = () => {
       );
       if (isConfirmed) {
         try {
-          await axios.delete(`${APIurl}/${item.productId}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
+          await Product.delete(APIurl, item);
           alert("حذف شد!");
           fetchProducts();
         } catch (err) {
-          alert(`Changes are not saved. ${err}`);
+          alert(err);
         }
       } else {
-        alert("Changes are not saved.");
+        alert("تغییرات اعمال نشد.");
       }
     } else {
-      alert("Product not found.");
+      alert("محصول مورد نظر یافت نشد.");
     }
   };
 

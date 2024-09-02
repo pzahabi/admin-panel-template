@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
-import Category from "../../models/Category";
+import CategoryInt from "../../models/Category";
 
 interface Props {
-  categories: Category[];
-  category: Category;
-  save: (item: Category, categoryId: number) => void;
+  categories: CategoryInt[];
+  category: CategoryInt;
+  save: (item: CategoryInt, categoryId: number) => void;
   isUploading: boolean;
 }
 

@@ -1,15 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import Product from "../../models/Product";
+import ProductInt from "../../models/Product";
 
 interface Props {
-  product: Product;
-  save: (item: Product) => void;
+  product: ProductInt;
+  save: (item: ProductInt) => void;
   isUploading: boolean;
 }
 
 export const ProductEdit = ({ product, save, isUploading }: Props) => {
-  const { register, handleSubmit, reset } = useForm<Product>({
+  const { register, handleSubmit, reset } = useForm<ProductInt>({
     defaultValues: product,
   });
 
@@ -17,7 +17,7 @@ export const ProductEdit = ({ product, save, isUploading }: Props) => {
     reset(product);
   }, [product, reset]);
 
-  const onSubmit = (data: Product) => {
+  const onSubmit = (data: ProductInt) => {
     save(data);
   };
 

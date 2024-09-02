@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import Category from "../../models/Category";
+import CategoryInt from "../../models/Category";
 import { Table, Spinner, Pagination } from "react-bootstrap";
 
 interface Props {
-  categories: Category[];
+  categories: CategoryInt[];
   isLoading: boolean;
   isEditing: number | null;
-  editCategory: (item: Category) => void;
-  removeCategory: (item: Category) => void;
-  cancel: (item: Category) => void;
+  editCategory: (item: CategoryInt) => void;
+  removeCategory: (item: CategoryInt) => void;
+  cancel: (item: CategoryInt) => void;
 }
 
 export const CategoryInfo = ({

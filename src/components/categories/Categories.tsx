@@ -1,9 +1,10 @@
-import React from "react";
+import { useCallback, useState, useEffect } from "react";
 import axios from "axios";
 import { baseApiUrl } from "../../services/api";
-import Category from "../../models/Category";
+import CategoryInt from "../../models/Category";
 import { CategoryInfo } from "./CategoryInfo";
 import { CategoryEdit } from "./CategoryEdit";
+import Category from "../../services/Category";
 
 export const Categories = () => {
   const APIurl = `${baseApiUrl}/api/CategoriesWithTokenAuth`;
@@ -13,33 +14,27 @@ export const Categories = () => {
     categoryName: "",
     description: "",
   };
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [category, setCategory] = React.useState<Category>(emptyCategory);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [isUploading, setIsUploading] = React.useState(false);
-  const [isEditing, setIsEditing] = React.useState<number | null>(null);
+  const [categories, setCategories] = useState<CategoryInt[]>([]);
+  const [category, setCategory] = useState<CategoryInt>(emptyCategory);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isEditing, setIsEditing] = useState<number | null>(null);
 
-  const fetchCategories = React.useCallback(async () => {
+  const fetchCategories = useCallback(async () => {
     setIsLoading(true);
-    await axios
-      .get(APIurl, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((result) => setCategories(result.data))
-
-      .catch((error) => {
-        alert(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    try {
+      const data = await Category.getAll(APIurl);
+      setCategories(data);
+    } catch (error) {
+      alert(error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const editCategory = (item: Category) => {
-    const temp: Category | undefined = categories.find(
-      (q: Category) => q.categoryId === item.categoryId
+  const editCategory = (item: CategoryInt) => {
+    const temp: CategoryInt | undefined = categories.find(
+      (q: CategoryInt) => q.categoryId === item.categoryId
     );
     if (temp) {
       setCategory(temp);
@@ -47,47 +42,34 @@ export const Categories = () => {
     }
   };
 
-  const save = async (item: Category, categoryId: number) => {
+  const save = async (item: CategoryInt, categoryId: number) => {
     setIsEditing(null);
     setIsUploading(true);
     if (categories.find((q) => q.categoryId === categoryId)) {
-      await axios
-        .put(`${APIurl}/${categoryId}`, item, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .catch((err) => {
-          // return alert(err);
-          console.log(err);
-        })
-        .finally(() => {
-          setIsUploading(false);
-        });
+      try {
+        await Category.update(APIurl, categoryId, item);
+      } catch (err) {
+        alert(err);
+      } finally {
+        setIsUploading(false);
+      }
       fetchCategories();
     } else {
-      await axios
-        .post(
-          APIurl,
-          { categoryName: item.categoryName, description: item.description },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setIsUploading(false);
-        });
+      try {
+        await Category.add(APIurl, item);
+      } catch (err) {
+        alert(err);
+      } finally {
+        setIsUploading(false);
+      }
       fetchCategories();
     }
   };
 
-  const removeCategory = async (item: Category) => {
-    const thisCategory = categories.find((q) => q.categoryId === item.categoryId);
+  const removeCategory = async (item: CategoryInt) => {
+    const thisCategory = categories.find(
+      (q) => q.categoryId === item.categoryId
+    );
     if (thisCategory) {
       // Show a confirmation dialog
       const isConfirmed = window.confirm(
@@ -98,34 +80,30 @@ export const Categories = () => {
         // If confirmed, proceed with deletion
         const apiUrl = `${APIurl}/${item.categoryId}`;
         try {
-          await axios.delete(apiUrl, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
+          await Category.delete(APIurl, item);
           // Show success message
           window.alert("حذف شد!");
           fetchCategories(); // Refresh the list after deletion
         } catch (err) {
           // Show error message
-          window.alert(`Changes are not saved. ${err}`);
+          alert(err);
         }
       } else {
         // Show message if deletion is canceled
-        window.alert("Changes are not saved.");
+        alert("تغییرات اعمال نشد.");
       }
     } else {
       // Show message if the product is not found
-      window.alert("Category not found.");
+      alert("دسته بندی مورد نظر یافت نشد.");
     }
   };
 
-  const cancel = (item: Category) => {
+  const cancel = (item: CategoryInt) => {
     setIsEditing(null);
     setCategory(emptyCategory);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchCategories();
   }, [fetchCategories, APIurl]);
 
@@ -134,7 +112,9 @@ export const Categories = () => {
       <div className="container-fluid row mb-4">
         <div className="col-md-12 m-2 mb-4 pb-4">
           <main className="container border border-dark rounded mt-4 mb-4">
-            <div className="row bg-light rounded-top p-2">لیست دسته بندی محصولات</div>
+            <div className="row bg-light rounded-top p-2">
+              لیست دسته بندی محصولات
+            </div>
             <div className="d-flex flex-row-reverse row p-4">
               <section className="col-md-4">
                 <CategoryEdit
